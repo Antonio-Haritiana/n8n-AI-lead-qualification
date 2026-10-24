@@ -1,0 +1,412 @@
+{
+  "name": "Lead intake",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ JSON.stringify($json) }}",
+        "options": {
+          "systemMessage": "You are an AI lead qualification assistant.\n\nAnalyze only the lead data provided in the user message. Never invent facts, infer unsupported details, or create hypothetical scenarios. If information is missing, treat it as unknown.\n\n## Lead classification\n\nClassify the lead as Hot, Warm, or Cold using the following score thresholds:\n- Hot: 70–100\n- Warm: 40–69\n- Cold: 0–39\n\nAssign a lead_score from 0 to 100 based on the available evidence, including urgency, budget, business need, project scope, and engagement. Do not assume that missing information is negative or positive without justification.\n\nThe qualification_status must always match the lead_score thresholds above.\n\n## Personalized email\n\nWrite a concise, professional follow-up email using only verified information from the lead data. Personalize it to the lead's stated needs. Do not invent business facts, guarantee results, or claim that services or solutions have already been implemented.\n\nUse a polite call to action when appropriate. If the first name or email address is unavailable, return an empty string for the corresponding field. Include a subject line in personalized_email.\n\n## Output requirements\n\nReturn one valid JSON object only, with exactly these fields:\n- qualification_status: string (\"Hot\", \"Warm\", or \"Cold\")\n- lead_score: integer from 0 to 100\n- reasoning: concise explanation supported by the input data\n- firstname: string\n- client_email_address: string\n- personalized_email: string\n\nDo not include Markdown code fences or text outside the JSON object. Do not ask the user to provide JSON."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -496,
+        112
+      ],
+      "id": "a3624e45-ee1e-4821-a4dd-f4a4c1c52974",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "formTitle": "Request an Automation Consultation",
+        "formDescription": "Tell us about your business and what you would like to improve. Our team will review your request and get back to you.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "First name "
+            },
+            {
+              "fieldLabel": "Last name "
+            },
+            {
+              "fieldLabel": "Business Email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "Company name "
+            },
+            {
+              "fieldLabel": "Your role ",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Business owner / Founder"
+                  },
+                  {
+                    "option": "Manager"
+                  },
+                  {
+                    "option": "Operations / Administration "
+                  },
+                  {
+                    "option": "Other"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Company size",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "1-5 employees"
+                  },
+                  {
+                    "option": "6-20 employees"
+                  },
+                  {
+                    "option": "20-50 employees"
+                  },
+                  {
+                    "option": "50 + employees"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "What would you like to automate?",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Lead follow-up and data entry"
+                  },
+                  {
+                    "option": "CRM data synchronization"
+                  },
+                  {
+                    "option": "Customer support and email handling"
+                  },
+                  {
+                    "option": "Other"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "How often does this task occur?",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Daily"
+                  },
+                  {
+                    "option": "Several times a week"
+                  },
+                  {
+                    "option": "Weekly"
+                  },
+                  {
+                    "option": "Occasionally"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Estimated project budget",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Under $1,000"
+                  },
+                  {
+                    "option": "$1,000–$5,000"
+                  },
+                  {
+                    "option": "$5,000–$10,000"
+                  },
+                  {
+                    "option": "Not sure yet "
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "When would you like to get started? ",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Immediately"
+                  },
+                  {
+                    "option": "Within 1month  "
+                  },
+                  {
+                    "option": "Within 3 months  "
+                  },
+                  {
+                    "option": "Just researching"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -1056,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "appToken",
+        "email": "={{ $json['Business Email'] }}",
+        "additionalFields": {
+          "companyName": "={{ $json['Company name '] }}",
+          "companySize": "={{ $json['Company size'] }}",
+          "customPropertiesUi": {
+            "customPropertiesValues": [
+              {
+                "property": "what_would_you_like_to_automate",
+                "value": "={{ $json['What would you like to automate?'] }}"
+              },
+              {
+                "property": "how_often_does_this_task_occur",
+                "value": "={{ $json['How often does this task occur?'] }}"
+              },
+              {
+                "property": "estimated_project_budget",
+                "value": "={{ $json['Estimated project budget'] }}"
+              },
+              {
+                "property": "when_would_you_like_to_get_started",
+                "value": "={{ $json['When would you like to get started? '] }}"
+              }
+            ]
+          },
+          "firstName": "={{ $json['First name '] }}",
+          "jobTitle": "={{ $json['Your role '] }}",
+          "lastName": "={{ $json['Last name '] }}"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        -832,
+        112
+      ],
+      "id": "a1917803-5df5-4eae-95ef-110d6b156181",
+      "name": "Create or update a contact"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        -528,
+        320
+      ],
+      "id": "bbc12880-0540-498c-a49b-2976d32ee22b",
+      "name": "Google Gemini Chat Model"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "ab839195-a163-4fef-b5d9-ecdad7f85aa4",
+              "leftValue": "={{ JSON.parse($json.output).qualification_status }}",
+              "rightValue": "Hot",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        -208,
+        384
+      ],
+      "id": "e87497c0-6f62-457a-9219-97c0b7bf0876",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "user",
+        "user": {
+        },
+        "text": "=🔥 *New HOT Lead!*  *Name:* {{ JSON.parse($('AI Agent').item.json.output).firstname}} *Email:* {{ JSON.parse($('AI Agent').item.json.output).client_email_address}}  *Lead score:* {{ JSON.parse($('AI Agent').item.json.output).lead_score }}/100  *Reasoning:* {{ JSON.parse($('AI Agent').item.json.output).reasoning }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        96,
+        368
+      ],
+      "id": "985b3427-324a-4879-9450-d592816618c2",
+      "name": "Send a message"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.client_email_address }}",
+        "subject": "={{ $json.Subject }}",
+        "emailType": "text",
+        "message": "={{ $json.Body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        16,
+        -16
+      ],
+      "id": "14171ddd-d92f-4661-a051-5688275279c1",
+      "name": "Send a message1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "854698a9-b187-4728-9625-a34c520e632e",
+              "name": "Subject",
+              "value": "={{ JSON.parse($json.output).personalized_email.split('\\n')[0].replace(/^Subject:\\s*/, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "9b62cb4b-32c0-425e-a092-e607fbd54ab0",
+              "name": "Body",
+              "value": "={{ JSON.parse($json.output).personalized_email.split('\\n').slice(1).join('\\n').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "47dea772-b779-4cc1-b6d2-4ab672abf830",
+              "name": "client_email_address",
+              "value": "={{ JSON.parse($json.output).client_email_address}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -128,
+        112
+      ],
+      "id": "965c2101-1368-4a44-a7f1-49eb6a2aa3b5",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Create or update a contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create or update a contact": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}
