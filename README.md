@@ -1,6 +1,6 @@
 # n8n AI Lead Qualification & Follow-Up
 
-An n8n automation project that captures business enquiries, stores lead information in HubSpot, uses Google Gemini to qualify leads, generates personalized follow-up emails, and alerts the team about high-priority leads through Slack.
+An n8n automation project that captures business enquiries, stores and update lead information in HubSpot, uses Google Gemini to qualify leads, generates personalized follow-up emails, and alerts the team about high-priority leads through Slack.
 
 Note: 
 n8n is self-hosted inside docker on my Ubuntu VM
@@ -26,7 +26,7 @@ This project demonstrates how workflow automation and generative AI can streamli
 ## Workflow Architecture
 
 1. **Form Trigger** — Receives a new lead's information.
-2. **HubSpot** — Creates the contact record.
+2. **HubSpot** — Creates and update the contact record.
 3. **AI Agent (Google Gemini)** — Evaluates the lead, assigns a score and category, and generates a personalized email.
 4. **Conditional Branch** — Checks whether the lead qualifies as Hot.
 5. **Slack** — Notifies the team about Hot leads.
