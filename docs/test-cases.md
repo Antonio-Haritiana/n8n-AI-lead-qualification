@@ -164,9 +164,9 @@ Missing optional data does not cause unexpected failure but I think it is better
 **Status:** Pass with a fix
 
 **Evidence:** 
-`screenshots/13-invalid-email-address.png`
-`screenshots/14-ai-output-missing-optianal-field.png`
-`screenshots/15-required-field.png`
+- `screenshots/13-invalid-email-address.png`
+- `screenshots/14-ai-output-missing-optianal-field.png`
+- `screenshots/15-required-field.png`
 
 ## 4. Test Summary
 
