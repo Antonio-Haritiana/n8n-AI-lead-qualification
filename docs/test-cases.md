@@ -156,7 +156,7 @@ Validate that the n8n workflow correctly processes leads, classifies them using 
 - Invalid data is rejected or handled safely.
 - Missing optional data does not cause unexpected failures.
 
-**Actual Results:** Invalid data such as email is not permitted, only a valid one is allowed 
+**Actual Results:** Invalid data such as email is not permitted, only a valid one is allowed. 
 Missing optional data does not cause unexpected failure but I think it is better for the AI qualification and lead follow up to have those fields all required (it can for example save time for further investigation if we have all information already there)
 
 **Fix:** Require all fields to be filled
