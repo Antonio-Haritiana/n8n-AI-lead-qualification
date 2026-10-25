@@ -31,8 +31,8 @@ Validate that the n8n workflow correctly processes leads, classifies them using 
 **Status:** Pass 
 
 **Evidence:**
-- screenshots/01-hot-lead-execution.png
-- screenshots/02-hot-lead-ai-output.png
+- `screenshots/01-hot-lead-execution.png`
+- `screenshots/02-hot-lead-ai-output.png`
 - `screenshots/03-hot-lead-email.png`
 - `screenshots/04-hot-lead-slack.png`
 
